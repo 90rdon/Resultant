@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI + BI Integration Strategy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Executive Gold & Navy -->
+    <!-- Application Structure Plan: A single-page, story-driven application that transforms the linear report into an interactive journey. Key sections include an interactive blueprint (tabs for Architecture, Governance, Use Cases), a visual roadmap timeline, and a dashboard-style ROI section. This structure prioritizes user engagement and exploration over passive reading, making the complex strategy more digestible for executive stakeholders. -->
+    <!-- Visualization & Content Choices: Market Shift -> Goal: Inform -> Viz: CSS Flow Diagram -> Interaction: Static -> Justification: Simple visual to establish context. | Architecture -> Goal: Organize -> Viz: Interactive CSS Diagram -> Interaction: Hover for details -> Justification: Deconstructs the complex stack into understandable parts. | Governance -> Goal: Inform/Organize -> Viz: Flippable Cards -> Interaction: Click to reveal -> Justification: Engages user to learn about risk mitigation. | Use Cases -> Goal: Compare/Organize -> Viz: Filterable Card Gallery (HTML/JS) -> Interaction: Filter by department -> Justification: Allows users to explore relevant applications. | Roadmap -> Goal: Change/Organize -> Viz: Interactive Timeline (HTML/CSS/JS) -> Interaction: Click to expand phase details -> Justification: Presents a clear, step-by-step plan. | ROI -> Goal: Compare -> Viz: Bar Chart (Chart.js), Donut Chart (Chart.js), KPI Cards -> Interaction: Static with tooltips -> Justification: Provides a quantifiable "wow" moment showing tangible benefits. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        html, body {
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #030712; /* Navy Black */
+            color: #d1d5db; /* Gray 300 */
+        }
+        main {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+        section {
+            height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24, #fde047);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-link.active {
+            color: #fbbf24; /* Amber 400 */
+            font-weight: 600;
+        }
+        .glass-card {
+            background-color: rgba(30, 41, 59, 0.4); /* Slate 800 with opacity */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(55, 65, 81, 0.6); /* Gray 700 with opacity */
+            border-radius: 1rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .glass-card:hover {
+            background-color: rgba(55, 65, 81, 0.5);
+             transform: translateY(-5px);
+        }
+        .tab.active {
+            border-color: #f59e0b; /* Amber 500 */
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #fbbf24; /* Amber 400 */
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -1px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% - 20px);
+            background-color: #374151; /* Gray 700 */
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -8px;
+            top: 12px;
+            width: 18px;
+            height: 18px;
+            background-color: #f59e0b;
+        }
+        .filter-btn.active {
+            background-color: #f59e0b;
+            color: #111827;
+            box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.2);
+        }
+        .filter-btn {
+            background-color: #1f2937;
+            color: #d1d5db;
+        }
+        .risk-card-inner {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .risk-card.is-flipped .risk-card-inner {
+            transform: rotateY(180deg);
+        }
+        .risk-card-front, .risk-card-back {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        .risk-card-back {
+            transform: rotateY(180deg);
+            background-color: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .chart-container {
+             position: relative; 
+             width: 100%; 
+             max-width: 600px; 
+             margin-left: auto; 
+             margin-right: auto; 
+             height: 300px;
+             max-height: 400px;
+        }
+        .kpi-card {
+            background-color: rgba(30, 41, 59, 0.3);
+            border-left: 5px solid #f59e0b; /* Amber 500 */
+            transition: background-color 0.3s ease;
+        }
+        .kpi-card:hover {
+             background-color: rgba(30, 41, 59, 0.6);
+        }
+        .scroll-nav {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .scroll-button {
+            background-color: rgba(31, 41, 55, 0.5);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+        .scroll-button:hover {
+            background-color: rgba(55, 65, 81, 0.7);
+            transform: scale(1.1);
+        }
+        .scrollable-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        .scrollable-container::-webkit-scrollbar-track {
+            background: rgba(31, 41, 55, 0.5);
+        }
+        .scrollable-container::-webkit-scrollbar-thumb {
+            background-color: #f59e0b;
+            border-radius: 4px;
+        }
+        .gemini-loader {
+            border: 4px solid rgba(251, 191, 36, 0.2);
+            border-top-color: #f59e0b;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @media (min-width: 768px) {
+            .chart-container {
+                 height: 350px; 
+            }
+        }
+        /* Chart.js dark theme overrides */
+        .chartjs-tooltip {
+            background: rgba(17, 24, 39, 0.8) !important;
+            border: 1px solid rgba(55, 65, 81, 1) !important;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <header class="bg-gray-950/70 backdrop-blur-lg fixed top-0 w-full z-50 shadow-lg shadow-black/10">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-white">Gordon's GenAI Strategy</h1>
+            <div class="hidden md:flex space-x-8" id="nav-links">
+                <a href="#hero" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Home</a>
+                <a href="#opportunity" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Opportunity</a>
+                <a href="#blueprint" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Blueprint</a>
+                <a href="#roadmap" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Roadmap</a>
+                <a href="#roi" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Business Impact</a>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main-container">
+        <section id="hero" class="bg-gray-900 relative overflow-hidden">
+             <div class="absolute inset-0 bg-grid-gray-800/20 [mask-image:linear-gradient(to_bottom,white_5%,transparent_100%)]"></div>
+             <style>.bg-grid-gray-800\/20{background-image:linear-gradient(to right, #374151 1px, transparent 1px), linear-gradient(to bottom, #374151 1px, transparent 1px);background-size:3rem 3rem;}</style>
+
+            <div class="container mx-auto px-6 text-center relative z-10">
+                <p class="text-amber-500 font-semibold mb-3">A Strategic Blueprint for Financial Services</p>
+                <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Generative AI + BI <br><span class="gradient-text">Integration Strategy</span></h2>
+                <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-400 mb-10">
+                    A pragmatic approach to activate GenAI in your data workflows, leveraging existing Snowflake and Tableau investments without creating chaos.
+                </p>
+                <div class="inline-block bg-gray-800 border border-gray-700 text-amber-400 rounded-full px-6 py-3 font-semibold">
+                    Core Principle: Bring AI to the Data, Not Data to AI
+                </div>
+            </div>
+        </section>
+
+        <section id="opportunity">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h3 class="text-3xl font-bold text-white mb-3">The Market Shift to <span class="gradient-text">Generative BI</span></h3>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">Business Intelligence is evolving from a rear-view mirror to a conversational, predictive engine. This shift democratizes data and creates new competitive advantages.</p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8 text-center items-center">
+                    <div class="glass-card p-8">
+                        <p class="text-5xl mb-4">🔎</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">Traditional BI</h4>
+                        <p class="text-gray-400">Static dashboards and historical reports answer "what happened."</p>
+                    </div>
+                    <div class="flex items-center justify-center text-gray-500">
+                        <span class="text-5xl font-light">&rarr;</span>
+                    </div>
+                    <div class="glass-card p-8 border-amber-500/50">
+                        <p class="text-5xl mb-4">💬</p>
+                        <h4 class="text-xl font-semibold text-white mb-2">Generative BI</h4>
+                        <p class="text-gray-400">Conversational interfaces and narratives answer "why it happened" and "what to do next."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="blueprint" class="bg-gray-900">
+            <div class="container mx-auto px-6 w-full max-w-4xl scrollable-container h-full overflow-y-auto py-24">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-white mb-3">The <span class="gradient-text">Integrated Blueprint</span></h3>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">Our strategy activates the native AI capabilities within your existing platforms. This unified approach maximizes ROI, simplifies governance, and minimizes risk.</p>
+                </div>
+                
+                <div class="w-full mx-auto glass-card p-4 sm:p-8">
+                    <div class="flex border-b border-gray-700 mb-8">
+                        <button data-tab="architecture" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 transition-colors duration-300">Architecture</button>
+                        <button data-tab="governance" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Governance</button>
+                        <button data-tab="use-cases" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Use Cases</button>
+                    </div>
+
+                    <div id="tab-content" class="pr-2">
+                        <div data-tab-content="architecture">
+                             <div class="bg-gray-900/50 p-6 rounded-xl">
+                                <div class="space-y-4">
+                                    <div class="bg-sky-500/10 text-sky-300 p-4 rounded-lg text-center shadow-inner">
+                                        <h5 class="font-bold">Tableau Insight Layer</h5>
+                                        <p class="text-sm">Tableau Pulse, Agent, Einstein Trust Layer</p>
+                                    </div>
+                                    <div class="flex justify-center items-center text-gray-500 text-xl">&darr; <span class="text-sm ml-2">Secure Live Queries</span> &darr;</div>
+                                    <div class="bg-blue-500/10 text-blue-300 p-4 rounded-lg">
+                                        <h5 class="font-bold text-center mb-4">Snowflake AI Data Cloud (Secure Perimeter)</h5>
+                                        <div class="grid md:grid-cols-3 gap-4 text-sm text-center">
+                                            <div class="bg-gray-900 p-3 rounded-md shadow-sm"><h6 class="font-semibold">Cortex Analyst</h6><p>Text-to-SQL</p></div>
+                                            <div class="bg-gray-900 p-3 rounded-md shadow-sm"><h6 class="font-semibold">Cortex Search</h6><p>RAG Engine</p></div>
+                                            <div class="bg-gray-900 p-3 rounded-md shadow-sm"><h6 class="font-semibold">Cortex Agents</h6><p>Orchestration</p></div>
+                                        </div>
+                                    </div>
+                                     <div class="flex justify-center items-center text-gray-500 text-xl">&darr; <span class="text-sm ml-2">Unified Governance</span> &darr;</div>
+                                      <div class="bg-indigo-500/10 text-indigo-300 p-4 rounded-lg text-center shadow-inner">
+                                        <h5 class="font-bold">Governed Data Foundation</h5>
+                                        <p class="text-sm">Data Lakehouse (Structured & Unstructured Data)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-tab-content="governance" class="hidden">
+                             <p class="text-center text-gray-400 mb-8">Click each card to learn how our architecture mitigates GenAI risks by design.</p>
+                             <div class="grid md:grid-cols-2 gap-6">
+                                <div class="risk-card perspective-1000 group"><div class="risk-card-inner relative w-full h-48">
+                                    <div class="risk-card-front absolute w-full h-full glass-card p-6 flex flex-col justify-center items-center text-center">
+                                        <div><p class="text-3xl mb-2">😵‍💫</p><h5 class="text-lg font-semibold text-white">Hallucination</h5><p class="text-sm text-gray-400">AI invents facts</p></div>
+                                        <div class="absolute bottom-4 right-4 text-gray-500 group-hover:text-amber-400 transition-colors text-xl" title="Click to flip">&#x21BA;</div>
+                                    </div>
+                                    <div class="risk-card-back absolute w-full h-full rounded-xl p-6 flex flex-col justify-center"><h6 class="font-bold text-amber-400">Mitigation: RAG</h6><p class="text-sm text-amber-200">Retrieval-Augmented Generation via <span class="font-semibold">Snowflake Cortex Search</span> grounds all answers in your verified, proprietary documents.</p></div>
+                                </div></div>
+                                <div class="risk-card perspective-1000 group"><div class="risk-card-inner relative w-full h-48">
+                                    <div class="risk-card-front absolute w-full h-full glass-card p-6 flex flex-col justify-center items-center text-center">
+                                        <div><p class="text-3xl mb-2">🔒</p><h5 class="text-lg font-semibold text-white">Data Privacy</h5><p class="text-sm text-gray-400">Sensitive data leakage</p></div>
+                                        <div class="absolute bottom-4 right-4 text-gray-500 group-hover:text-amber-400 transition-colors text-xl" title="Click to flip">&#x21BA;</div>
+                                    </div>
+                                    <div class="risk-card-back absolute w-full h-full rounded-xl p-6 flex flex-col justify-center"><h6 class="font-bold text-amber-400">Mitigation: In-Platform AI</h6><p class="text-sm text-amber-200">All AI operations occur inside the <span class="font-semibold">Snowflake Secure Perimeter</span> and <span class="font-semibold">Tableau Einstein Trust Layer</span>. Your data never leaves.</p></div>
+                                </div></div>
+                                <div class="risk-card perspective-1000 group"><div class="risk-card-inner relative w-full h-48">
+                                    <div class="risk-card-front absolute w-full h-full glass-card p-6 flex flex-col justify-center items-center text-center">
+                                        <div><p class="text-3xl mb-2">📊</p><h5 class="text-lg font-semibold text-white">Algorithmic Bias</h5><p class="text-sm text-gray-400">Unfair outcomes</p></div>
+                                        <div class="absolute bottom-4 right-4 text-gray-500 group-hover:text-amber-400 transition-colors text-xl" title="Click to flip">&#x21BA;</div>
+                                    </div>
+                                    <div class="risk-card-back absolute w-full h-full rounded-xl p-6 flex flex-col justify-center"><h6 class="font-bold text-amber-400">Mitigation: Monitoring</h6><p class="text-sm text-amber-200">Use curated data for RAG. Continuously monitor AI decision patterns for bias using <span class="font-semibold">Tableau Dashboards</span> and human oversight.</p></div>
+                                </div></div>
+                                <div class="risk-card perspective-1000 group"><div class="risk-card-inner relative w-full h-48">
+                                    <div class="risk-card-front absolute w-full h-full glass-card p-6 flex flex-col justify-center items-center text-center">
+                                        <div><p class="text-3xl mb-2">✍️</p><h5 class="text-lg font-semibold text-white">Auditability</h5><p class="text-sm text-gray-400">"Black box" decisions</p></div>
+                                        <div class="absolute bottom-4 right-4 text-gray-500 group-hover:text-amber-400 transition-colors text-xl" title="Click to flip">&#x21BA;</div>
+                                    </div>
+                                    <div class="risk-card-back absolute w-full h-full rounded-xl p-6 flex flex-col justify-center"><h6 class="font-bold text-amber-400">Mitigation: Explainability</h6><p class="text-sm text-amber-200">RAG provides <span class="font-semibold">source citations</span>. All prompts and generated SQL are logged in <span class="font-semibold">Snowflake Query History</span> for a complete audit trail.</p></div>
+                                </div></div>
+                             </div>
+                        </div>
+
+                        <div data-tab-content="use-cases" class="hidden">
+                             <p class="text-center text-gray-400 mb-8">Filter by business function to see how GenAI can drive tangible value across the organization.</p>
+                             <div class="flex justify-center flex-wrap gap-2 mb-8" id="use-case-filters">
+                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="all">All</button>
+                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Wealth Management">Wealth</button>
+                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Risk & Compliance">Risk</button>
+                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Investment Research">Research</button>
+                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Operations">Ops</button>
+                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Executive Leadership">Execs</button>
+                             </div>
+                             <div id="use-case-gallery" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap">
+            <div class="container mx-auto px-6 w-full max-w-4xl scrollable-container h-full overflow-y-auto py-24">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-white mb-3">The Phased <span class="gradient-text">Implementation Roadmap</span></h3>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">A detailed, multi-year view of how the Generative AI initiative will scale across the enterprise, building compounding value over time.</p>
+                </div>
+                <div class="mx-auto">
+                    <div class="relative pl-8">
+                        <!-- Phase 1 -->
+                        <div class="timeline-item mb-12">
+                            <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 1: Foundational Readiness & Governance</h4>
+                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 1-6)</p>
+                            <div class="glass-card p-6 space-y-4">
+                                <div>
+                                    <h5 class="font-bold text-white">Objective</h5>
+                                    <p class="text-gray-400 text-sm">To build the non-negotiable technical and governance bedrock for all future AI success, focusing on IT and risk management.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-white">Target Departments</h5>
+                                    <p class="text-gray-400 text-sm">Information Technology, Compliance, Legal, Risk.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                    <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+                                        <li>AI Governance Committee established and chartered.</li>
+                                        <li>Pilot AI-assisted data integration pipeline executed.</li>
+                                        <li>"Factory Model" Playbook v1.0 for scalable data integration.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 2 -->
+                        <div class="timeline-item mb-12">
+                            <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 2: Initial Value Realization</h4>
+                             <p class="text-amber-400 font-medium text-sm mb-3">(Months 6-12)</p>
+                            <div class="glass-card p-6 space-y-4">
+                                <div>
+                                    <h5 class="font-bold text-white">Objective</h5>
+                                    <p class="text-gray-400 text-sm">To deploy the first wave of high-impact applications, building trust and proving the reusability of the architecture.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-white">Target Departments</h5>
+                                    <p class="text-gray-400 text-sm">Compliance, Investment Research, Wealth Management.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                    <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+                                        <li>Compliance Research Assistant (RAG Application) deployed.</li>
+                                        <li>Automated Earnings Call Summaries for Investment Research.</li>
+                                        <li>Conversational Analytics Pilot for select Wealth Advisors.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 3 -->
+                        <div class="timeline-item mb-12">
+                            <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 3: Enterprise Scaling & Optimization</h4>
+                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 12-24)</p>
+                            <div class="glass-card p-6 space-y-4">
+                                <div>
+                                    <h5 class="font-bold text-white">Objective</h5>
+                                    <p class="text-gray-400 text-sm">To scale proven AI patterns to other business units and deliver proactive insights to senior leadership.</p>
+                                </div>
+                                 <div>
+                                    <h5 class="font-bold text-white">Target Departments</h5>
+                                    <p class="text-gray-400 text-sm">Operations, Executive Leadership, Commercial Lending.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                    <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+                                        <li>Automated AML Alert Triage for Operations.</li>
+                                        <li>Conversational BI for Executive Leadership via Tableau Pulse.</li>
+                                        <li>Enhanced Credit Risk Model Pilot for Commercial Lending.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Phase 4 -->
+                        <div class="timeline-item">
+                            <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 4: Continuous Innovation & Maturation</h4>
+                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 24+)</p>
+                            <div class="glass-card p-6 space-y-4">
+                                 <div>
+                                    <h5 class="font-bold text-white">Objective</h5>
+                                    <p class="text-gray-400 text-sm">To embed GenAI as a core capability and explore advanced applications that create a sustainable competitive advantage.</p>
+                                </div>
+                                 <div>
+                                    <h5 class="font-bold text-white">Target Departments</h5>
+                                    <p class="text-gray-400 text-sm">All, including M&A and Corporate Strategy.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                    <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
+                                        <li>Enterprise-wide "AI Co-pilot" availability.</li>
+                                        <li>Automated Due Diligence for M&A team.</li>
+                                        <li>Exploration of custom Cortex Agents for complex tasks.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roi" class="bg-gray-900">
+            <div class="container mx-auto px-6 w-full max-w-6xl scrollable-container h-full overflow-y-auto py-24">
+                <div class="text-center mb-12">
+                    <h3 class="text-3xl font-bold text-white mb-3">Projected Business Impact & <span class="gradient-text">ROI Dashboard</span></h3>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">Our success framework is built on quantifiable metrics, tracking leading indicators that drive top-line business outcomes and overall ROI.</p>
+                </div>
+                <div class="mx-auto grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+                    <div class="glass-card p-6">
+                        <h4 class="text-xl font-semibold text-center text-white mb-4">Key Performance Indicators (Y2 Targets)</h4>
+                        <div class="space-y-4">
+                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">EFFICIENCY</p><p class="text-4xl font-extrabold text-amber-400">>50%</p><p class="text-white font-semibold">Faster Time-to-Insight</p></div>
+                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">COST REDUCTION</p><p class="text-4xl font-extrabold text-amber-400">~30%</p><p class="text-white font-semibold">Lower Data Operations TCO</p></div>
+                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">RISK MITIGATION</p><p class="text-4xl font-extrabold text-amber-400">>80%</p><p class="text-white font-semibold">Faster Compliance Research</p></div>
+                        </div>
+                    </div>
+                     <div class="glass-card p-6 space-y-8">
+                        <div>
+                            <h4 class="text-xl font-semibold text-center text-white mb-4">Productivity: Data Pipeline Development</h4>
+                            <div class="chart-container" style="height: 250px; max-height: 250px;"><canvas id="roiChart"></canvas></div>
+                        </div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-center text-white mb-4">Sources of Projected >40% ROI</h4>
+                            <div class="chart-container" style="height: 250px; max-height: 250px;"><canvas id="roiBreakdownChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="footer-section" class="h-auto !py-10">
+            <footer class="bg-gray-950/50 border-t border-gray-800 text-gray-500 py-6 w-full">
+                <div class="container mx-auto px-6 text-center text-sm">
+                    <p>&copy; 2025 Gordon's Case Study for Resultant. Confidential Strategic Proposal.</p>
+                </div>
+            </footer>
+        </section>
+
+    </main>
+
+    <div class="scroll-nav">
+        <button id="scroll-up" class="scroll-button">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+        </button>
+        <button id="scroll-down" class="scroll-button">
+             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+        </button>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const useCaseData = [
+        { function: 'Wealth Management', case: 'Personalized Client Reporting & Insights', outcome: 'Increased client engagement and retention; improved advisor productivity.' },
+        { function: 'Investment Research', case: 'Automated Earnings Call Summaries & Trend Analysis', outcome: 'Accelerated time-to-insight for analysts; broader coverage of securities.' },
+        { function: 'Risk & Compliance', case: 'AI-Powered Compliance Research Assistant', outcome: 'Reduced time for regulatory research by 80%+; improved compliance consistency and auditability.' },
+        { function: 'Operations', case: 'Automated AML Alert Triage & Summarization', outcome: 'Reduced false positive investigation time; lower operational costs; focus on high-risk alerts.' },
+        { function: 'Executive Leadership', case: 'Conversational BI & Strategic Dashboards', outcome: 'Democratized access to data; faster, more informed strategic decision-making.' }
+    ];
+
+    const useCaseGallery = document.getElementById('use-case-gallery');
+    const filterContainer = document.getElementById('use-case-filters');
+
+    function renderUseCases(filter = 'all') {
+        if (!useCaseGallery) return;
+        useCaseGallery.innerHTML = '';
+        const filteredData = filter === 'all' 
+            ? useCaseData 
+            : useCaseData.filter(item => item.function === filter);
+
+        filteredData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'glass-card p-4 rounded-lg border-gray-700/50 transition-all duration-300 hover:border-amber-500/50';
+            card.innerHTML = `
+                <p class="text-sm font-semibold text-amber-500 mb-1">${item.function}</p>
+                <h5 class="font-bold text-white mb-2 text-base">${item.case}</h5>
+                <p class="text-sm text-gray-400">${item.outcome}</p>`;
+            useCaseGallery.appendChild(card);
+        });
+    }
+
+    if(filterContainer) {
+        filterContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelectorAll('#use-case-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                renderUseCases(e.target.dataset.filter);
+            }
+        });
+    }
+    
+
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('[data-tab-content]');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const target = tab.dataset.tab;
+            tabs.forEach(t => {
+                t.classList.remove('active');
+                t.classList.add('text-gray-500', 'hover:text-gray-300', 'border-transparent');
+            });
+            tab.classList.add('active');
+            tab.classList.remove('text-gray-500', 'hover:text-gray-300', 'border-transparent');
+            tabContents.forEach(content => {
+                content.style.opacity = 0;
+                content.classList.add('hidden');
+            });
+            const activeContent = document.querySelector(`[data-tab-content="${target}"]`);
+            activeContent.classList.remove('hidden');
+            setTimeout(() => activeContent.style.opacity = 1, 50);
+            activeContent.style.transition = 'opacity 0.3s ease-in-out';
+        });
+    });
+
+    const riskCards = document.querySelectorAll('.risk-card');
+    riskCards.forEach(card => {
+        card.addEventListener('click', () => card.classList.toggle('is-flipped'));
+    });
+    
+    if(tabs && tabs.length > 0) tabs[0].click();
+    if(filterContainer) filterContainer.querySelector('[data-filter="all"]').click();
+
+    // Chart.js Dark Theme Defaults
+    Chart.defaults.color = '#9ca3af'; // Gray 400
+    Chart.defaults.borderColor = 'rgba(55, 65, 81, 1)'; // Gray 700
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
+    const commonChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false, // Turn off default chart animation, GSAP will handle it
+        plugins: {
+            legend: { display: false },
+            tooltip: {
+                enabled: true,
+                mode: 'index',
+                intersect: false,
+                backgroundColor: 'rgba(17, 24, 39, 0.8)',
+                titleColor: '#f3f4f6',
+                bodyColor: '#d1d5db',
+                borderColor: '#374151',
+                borderWidth: 1,
+                padding: 10,
+                cornerRadius: 8,
+                displayColors: false
+            }
+        }
+    };
+    
+    let roiChartInstance, roiBreakdownChartInstance;
+
+    function initCharts() {
+        const roiCtx = document.getElementById('roiChart')?.getContext('2d');
+        if (roiCtx && !roiChartInstance) {
+            roiChartInstance = new Chart(roiCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Manual Process', 'AI-Assisted Process'],
+                    datasets: [{
+                        label: 'Avg. Pipeline Development Time (Hours)',
+                        data: [40, 18],
+                        backgroundColor: ['#4b5563', '#d97706'],
+                        borderColor: ['#6b7280', '#b45309'],
+                        borderWidth: 1
+                    }]
+                },
+                options: { ...commonChartOptions,
+                    indexAxis: 'y',
+                    scales: { x: { beginAtZero: true, grid: { color: '#374151' }, title: { display: true, text: 'Hours', color: '#9ca3af' } }, y: { grid: { display: false } } }
+                }
+            });
+        }
+
+        const roiBreakdownCtx = document.getElementById('roiBreakdownChart')?.getContext('2d');
+        if (roiBreakdownCtx && !roiBreakdownChartInstance) {
+            roiBreakdownChartInstance = new Chart(roiBreakdownCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cost Savings', 'Risk Reduction', 'Productivity Lift'],
+                    datasets: [{
+                        label: 'Source of ROI',
+                        data: [40, 35, 25],
+                        backgroundColor: ['#b45309', '#d97706', '#f59e0b'],
+                        borderColor: '#111827',
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                },
+                options: { ...commonChartOptions,
+                    plugins: { ...commonChartOptions.plugins, 
+                        legend: { display: true, position: 'bottom', labels: { color: '#9ca3af', boxWidth: 12, padding: 15 } }
+                    }
+                }
+            });
+        }
+    }
+
+    // GSAP Animations
+    const roiSection = document.getElementById('roi');
+    if(roiSection) {
+        const tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: roiSection,
+                scroller: '#main-container',
+                start: 'top 70%',
+                toggleActions: 'play none none none',
+                onEnter: () => {
+                   initCharts(); // Initialize charts when section is entered
+                   if (roiChartInstance) roiChartInstance.options.animation = true;
+                   if (roiBreakdownChartInstance) roiBreakdownChartInstance.options.animation = true;
+                   if (roiChartInstance) roiChartInstance.update();
+                   if (roiBreakdownChartInstance) roiBreakdownChartInstance.update();
+                }
+            }
+        });
+
+        tl.from(roiSection.querySelectorAll('.glass-card'), {
+            opacity: 0,
+            y: 50,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: 'power3.out'
+        })
+        .from(roiSection.querySelectorAll('.kpi-card'), {
+            opacity: 0,
+            x: -50,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: 'power2.out'
+        }, "-=0.5");
+    }
+
+    // Page scrolling logic
+    const mainContainer = document.getElementById('main-container');
+    const pageSections = document.querySelectorAll('#main-container > section');
+    let currentSectionIndex = 0;
+
+    function scrollToSection(index) {
+        if (index >= 0 && index < pageSections.length) {
+            mainContainer.scrollTo({
+                top: index * window.innerHeight,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    document.getElementById('scroll-up').addEventListener('click', () => {
+        scrollToSection(currentSectionIndex - 1);
+    });
+
+    document.getElementById('scroll-down').addEventListener('click', () => {
+        scrollToSection(currentSectionIndex + 1);
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            scrollToSection(currentSectionIndex - 1);
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            scrollToSection(currentSectionIndex + 1);
+        }
+    });
+
+    let scrollTimeout;
+    mainContainer.addEventListener('scroll', () => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            const scrollPosition = mainContainer.scrollTop;
+            const windowHeight = window.innerHeight;
+            currentSectionIndex = Math.round(scrollPosition / windowHeight);
+            
+            const activeSectionId = pageSections[currentSectionIndex]?.id || 'hero';
+            document.querySelectorAll('#nav-links a').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('href') === `#${activeSectionId}`);
+            });
+
+        }, 150);
+    });
+
+    // Nav link smooth scroll
+    document.querySelectorAll('#nav-links a').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            pageSections.forEach((section, index) => {
+                if (`#${section.id}` === targetId) {
+                    scrollToSection(index);
+                }
+            });
+        });
+    });
+});
+</script>
+</body>
+</html>
