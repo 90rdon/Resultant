@@ -9,13 +9,11 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Mermaid.js for diagram rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Executive Gold & Navy -->
-    <!-- Application Structure Plan: A single-page, story-driven application that transforms the linear report into an interactive journey. Key sections include an interactive blueprint (tabs for Architecture, Governance, Use Cases), a visual roadmap timeline, and a dashboard-style ROI section. This structure prioritizes user engagement and exploration over passive reading, making the complex strategy more digestible for executive stakeholders. -->
-    <!-- Visualization & Content Choices: Market Shift -> Goal: Inform -> Viz: CSS Flow Diagram -> Interaction: Static -> Justification: Simple visual to establish context. | Architecture -> Goal: Organize -> Viz: Interactive CSS Diagram -> Interaction: Hover for details -> Justification: Deconstructs the complex stack into understandable parts. | Governance -> Goal: Inform/Organize -> Viz: Flippable Cards -> Interaction: Click to reveal -> Justification: Engages user to learn about risk mitigation. | Use Cases -> Goal: Compare/Organize -> Viz: Filterable Card Gallery (HTML/JS) -> Interaction: Filter by department -> Justification: Allows users to explore relevant applications. | Roadmap -> Goal: Change/Organize -> Viz: Interactive Timeline (HTML/CSS/JS) -> Interaction: Click to expand phase details -> Justification: Presents a clear, step-by-step plan. | ROI -> Goal: Compare -> Viz: Bar Chart (Chart.js), Donut Chart (Chart.js), KPI Cards -> Interaction: Static with tooltips -> Justification: Provides a quantifiable "wow" moment showing tangible benefits. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         html, body {
             overflow: hidden;
@@ -189,6 +187,71 @@
             background: rgba(17, 24, 39, 0.8) !important;
             border: 1px solid rgba(55, 65, 81, 1) !important;
         }
+        
+        /* Mermaid Modal Styles */
+        .mermaid-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        .mermaid-modal-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .mermaid-modal-content {
+            background-color: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(55, 65, 81, 0.7);
+            border-radius: 1rem;
+            padding: 2rem;
+            width: 100%;
+            max-width: 80vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        .mermaid-modal-overlay.visible .mermaid-modal-content {
+            transform: scale(1);
+        }
+        .mermaid-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(55, 65, 81, 0.5);
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: #d1d5db;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            line-height: 1;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .mermaid-modal-close:hover {
+            background-color: rgba(245, 158, 11, 0.8);
+            color: #111827;
+        }
+        /* Mermaid diagram specific styling */
+        .mermaid {
+            text-align: center;
+        }
     </style>
 </head>
 <body class="text-gray-300">
@@ -284,6 +347,11 @@
                                         <h5 class="font-bold">Governed Data Foundation</h5>
                                         <p class="text-sm">Data Lakehouse (Structured & Unstructured Data)</p>
                                     </div>
+                                </div>
+                                <div class="mt-8 text-center">
+                                    <button id="open-mermaid-modal" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
+                                        View Detailed Data Flow
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -499,8 +567,101 @@
         </button>
     </div>
 
+    <!-- Mermaid Modal -->
+    <div id="mermaid-modal" class="mermaid-modal-overlay">
+        <div class="mermaid-modal-content scrollable-container">
+            <button id="close-mermaid-modal" class="mermaid-modal-close">&times;</button>
+            <h3 class="text-2xl font-bold text-white text-center mb-6">Detailed End-to-End Data Flow</h3>
+            <pre class="mermaid">
+                flowchart TD
+                    subgraph "Data Sources"
+                        direction LR
+                        A["Structured Data<br/>(Databases, ERPs, CRMs)"]
+                        B["Unstructured Data<br/>(PDFs, Images, Audio)"]
+                        C["Streaming Data<br/>(IoT, CDC, Events)"]
+                        D["Batch Files<br/>(CSVs, JSON, Parquet)"]
+                    end
+
+                    subgraph "Ingestion Layer"
+                        direction TB
+                        E["Snowpipe Streaming API<br/>Low-Latency Ingestion"]
+                        F["Snowpipe<br/>Automated Bulk Ingestion"]
+                        G["Cloud Storage<br/>(S3, Azure Blob, GCS)<br/>Staging Area"]
+                    end
+
+                    subgraph "Snowflake Cloud Data Platform"
+                        direction TB
+                        H["Raw Data Tables<br/>Landing Zone"]
+                        I["Snowpark<br/>(Python, Java, Scala)<br/>Transformation & Unstructured Data Processing"]
+                        J["Snowflake Cortex AI<br/>Sentiment, Summary, Forecast"]
+                        K["Fine-Tuned Models<br/>Custom AI/ML"]
+                        L["Processed & Enriched Data<br/>Analytics-Ready Tables & Views"]
+                    end
+
+                    subgraph "Visualization & BI Layer"
+                        direction TB
+                        M["Tableau<br/>Live Connection"]
+                        N["Tableau AI & Einstein<br/>Natural Language Queries & Predictive Insights"]
+                        O["Real-Time Dashboards<br/>Interactive Visualizations"]
+                    end
+
+                    %% Data Flow Connections
+                    A --> F
+                    B --> G
+                    D --> G
+                    G --> F
+                    C --> E
+
+                    E --> H
+                    F --> H
+
+                    H --> I
+                    I --> L
+                    L --> J
+                    L --> K
+                    J --> L
+                    K --> L
+
+                    L --> M
+                    M --> N
+                    N --> O
+
+                    %% Styling
+                    style A fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                    style B fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                    style C fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                    style D fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+
+                    style E fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#111827
+                    style F fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#111827
+                    style G fill:#fff2cc,stroke:#d6b656,stroke-width:2px,color:#111827
+
+                    style H fill:#f8cecc,stroke:#b85450,stroke-width:2px,color:#111827
+                    style I fill:#f5f5f5,stroke:#666666,stroke-width:2px,color:#111827
+                    style J fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,color:#111827
+                    style K fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,color:#111827
+                    style L fill:#e1d5e7,stroke:#9673a6,stroke-width:2px,color:#111827
+
+                    style M fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
+                    style N fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
+                    style O fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
+            </pre>
+        </div>
+    </div>
+
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Mermaid.js but don't render on load
+    mermaid.initialize({ 
+        startOnLoad: false, // <-- Render manually
+        theme: 'dark',
+        flowchart: {
+            useMaxWidth: true,
+            htmlLabels: true,
+        }
+    });
+
     gsap.registerPlugin(ScrollTrigger);
 
     const useCaseData = [
@@ -742,6 +903,57 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
+    });
+
+    // Mermaid Modal Logic
+    const openModalBtn = document.getElementById('open-mermaid-modal');
+    const closeModalBtn = document.getElementById('close-mermaid-modal');
+    const modalOverlay = document.getElementById('mermaid-modal');
+    const mermaidContainer = document.querySelector('.mermaid');
+    let mermaidRendered = false;
+
+    async function openModal() {
+        if (modalOverlay) {
+            modalOverlay.classList.add('visible');
+            // Only render mermaid if it hasn't been rendered yet
+            if (!mermaidRendered) {
+                try {
+                    // Force a re-render of the diagram inside the now-visible modal
+                    await mermaid.run({
+                        nodes: [mermaidContainer]
+                    });
+                    mermaidRendered = true; // Mark as rendered
+                } catch (e) {
+                    console.error("Error rendering mermaid diagram:", e);
+                    mermaidContainer.innerHTML = "Error rendering diagram. Please check the console.";
+                }
+            }
+        }
+    }
+
+    function closeModal() {
+        if (modalOverlay) {
+            modalOverlay.classList.remove('visible');
+        }
+    }
+
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', openModal);
+    }
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+    }
+    window.addEventListener('keydown', (e) => {
+        if(e.key === 'Escape' && modalOverlay.classList.contains('visible')) {
+            closeModal();
+        }
     });
 });
 </script>
