@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generative AI + BI Integration Strategy</title>
+    <title>AI-Powered Data Factory Strategy</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg width='32' height='32' viewBox='0 0 32 32' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='32' height='32' rx='8' fill='%23030712'/%3E%3Cpath d='M24 18C24 22.4183 20.4183 26 16 26C11.5817 26 8 22.4183 8 18C8 13.5817 11.5817 10 16 10H18' stroke='%23FBBF24' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M16 18H20' stroke='%23FBBF24' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -87,15 +87,6 @@
             height: 18px;
             background-color: #f59e0b;
         }
-        .filter-btn.active {
-            background-color: #f59e0b;
-            color: #111827;
-            box-shadow: 0 4px 14px 0 rgba(245, 158, 11, 0.2);
-        }
-        .filter-btn {
-            background-color: #1f2937;
-            color: #d1d5db;
-        }
         .risk-card-inner {
             transform-style: preserve-3d;
             transition: transform 0.6s;
@@ -167,29 +158,9 @@
             background-color: #f59e0b;
             border-radius: 4px;
         }
-        .gemini-loader {
-            border: 4px solid rgba(251, 191, 36, 0.2);
-            border-top-color: #f59e0b;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        @media (min-width: 768px) {
-            .chart-container {
-                 height: 350px; 
-            }
-        }
-        /* Chart.js dark theme overrides */
-        .chartjs-tooltip {
-            background: rgba(17, 24, 39, 0.8) !important;
-            border: 1px solid rgba(55, 65, 81, 1) !important;
-        }
         
-        /* Mermaid Modal Styles */
-        .mermaid-modal-overlay {
+        /* Modal Styles */
+        .info-modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -206,30 +177,41 @@
             transition: opacity 0.3s ease-in-out;
             pointer-events: none;
         }
-        .mermaid-modal-overlay.visible {
+        .info-modal-overlay.visible {
             opacity: 1;
             pointer-events: auto;
         }
-        .mermaid-modal-content {
-            background-color: rgba(30, 41, 59, 0.6);
+        .info-modal-content {
+            background-color: rgba(30, 41, 59, 0.7);
             border: 1px solid rgba(55, 65, 81, 0.7);
             border-radius: 1rem;
-            padding: 2rem;
+            padding: 1rem 2rem 2rem 2rem;
             width: 100%;
             max-width: 80vw;
             max-height: 90vh;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
             position: relative;
             transform: scale(0.95);
             transition: transform 0.3s ease-in-out;
+            overflow: hidden; 
         }
-        .mermaid-modal-overlay.visible .mermaid-modal-content {
+        .info-modal-overlay.visible .info-modal-content {
             transform: scale(1);
         }
-        .mermaid-modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
+        .info-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            flex-shrink: 0;
+        }
+        .info-modal-body {
+            overflow-y: auto;
+            flex-grow: 1;
+            min-height: 0;
+        }
+        .info-modal-close {
             background: rgba(55, 65, 81, 0.5);
             border-radius: 50%;
             width: 2.5rem;
@@ -244,21 +226,30 @@
             line-height: 1;
             transition: background-color 0.2s ease, color 0.2s ease;
         }
-        .mermaid-modal-close:hover {
+        .info-modal-close:hover {
             background-color: rgba(245, 158, 11, 0.8);
             color: #111827;
         }
-        /* Mermaid diagram specific styling */
-        .mermaid {
-            text-align: center;
+        .mermaid { text-align: center; }
+        
+        #tab-content h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #f59e0b;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
         }
+        #tab-content p, #tab-content li { line-height: 1.65; }
+        #tab-content p { margin-bottom: 1rem; }
+        #tab-content ul { list-style-position: inside; list-style-type: disc; margin-left: 0.5rem; margin-bottom: 1rem; }
+        #tab-content li { margin-bottom: 0.5rem; }
     </style>
 </head>
 <body class="text-gray-300">
 
     <header class="bg-gray-950/70 backdrop-blur-lg fixed top-0 w-full z-50 shadow-lg shadow-black/10">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-white">Gordon's GenBI Strategy</h1>
+            <h1 class="text-xl font-bold text-white">AI-Powered Data Factory Strategy</h1>
             <div class="hidden md:flex space-x-8" id="nav-links">
                 <a href="#hero" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Home</a>
                 <a href="#opportunity" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Opportunity</a>
@@ -275,13 +266,13 @@
              <style>.bg-grid-gray-800\/20{background-image:linear-gradient(to right, #374151 1px, transparent 1px), linear-gradient(to bottom, #374151 1px, transparent 1px);background-size:3rem 3rem;}</style>
 
             <div class="container mx-auto px-6 text-center relative z-10">
-                <p class="text-amber-500 font-semibold mb-3">A Strategic Blueprint for Financial Services</p>
-                <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">Generative AI + BI <br><span class="gradient-text">Integration Strategy</span></h2>
+                <p class="text-amber-500 font-semibold mb-3">A Strategic Blueprint for the Office of the CTO</p>
+                <h2 class="text-4xl md:text-6xl font-extrabold text-white mb-4 leading-tight">The AI-Powered Data Factory<br><span class="gradient-text">A Plan for Accelerated Integration</span></h2>
                 <p class="text-lg md:text-xl max-w-3xl mx-auto text-gray-400 mb-10">
-                    A pragmatic approach to activate GenAI in your data workflows, leveraging existing Snowflake and Tableau investments without creating chaos.
+                    This is a pragmatic, IT-driven strategy to stop being "left behind" by using GenAI to solve a core business problem: the slow, costly process of integrating new data sources for analytics and BI.
                 </p>
                 <div class="inline-block bg-gray-800 border border-gray-700 text-amber-400 rounded-full px-6 py-3 font-semibold">
-                    Core Principle: Bring AI to the Data, Not Data to AI
+                    Core Principle: From Data Bottleneck to Business Catalyst
                 </div>
             </div>
         </section>
@@ -312,7 +303,7 @@
         </section>
 
         <section id="blueprint" class="bg-gray-900">
-            <div class="container mx-auto px-6 w-full max-w-4xl scrollable-container h-full overflow-y-auto py-24">
+            <div class="container mx-auto px-6 w-full max-w-5xl scrollable-container h-full overflow-y-auto py-24">
                 <div class="text-center mb-12">
                     <h3 class="text-3xl font-bold text-white mb-3">The <span class="gradient-text">Strategic Blueprint</span></h3>
                     <p class="text-lg text-gray-400 max-w-3xl mx-auto">Our strategy activates the native AI capabilities within your existing platforms. This unified approach maximizes ROI, simplifies governance, and minimizes risk.</p>
@@ -322,7 +313,9 @@
                     <div class="flex border-b border-gray-700 mb-8">
                         <button data-tab="architecture" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 transition-colors duration-300">Architecture</button>
                         <button data-tab="governance" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Governance</button>
-                        <button data-tab="use-cases" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Use Cases</button>
+                        <button data-tab="validation" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Trust & Validation</button>
+                        <button data-tab="factory" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Factory Model</button>
+                        <button data-tab="flywheel" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Value Flywheel</button>
                     </div>
 
                     <div id="tab-content" class="pr-2">
@@ -356,7 +349,79 @@
                             </div>
                         </div>
 
-                        <div data-tab-content="governance" class="hidden">
+                        <div data-tab-content="governance" class="hidden scrollable-container">
+                            <div class="text-center">
+                                <h4 class="!mt-2">AI Governance Structure</h4>
+                                <p class="text-gray-400 mb-6">The AIGC acts as the central hub, translating executive strategy into actionable policy and gathering expertise from across the firm.</p>
+                            </div>
+                            <div class="space-y-4">
+                                <!-- Executive Leadership -->
+                                <div class="text-center">
+                                    <div class="inline-block bg-indigo-600/20 text-indigo-300 border border-indigo-500/50 rounded-lg px-4 py-2">
+                                        <h5 class="font-bold text-white">Executive Leadership & Board</h5>
+                                        <p class="text-sm">Sets overall company strategy & risk appetite</p>
+                                    </div>
+                                    <div class="text-2xl text-indigo-400 my-2">&updownarrow;</div>
+                                </div>
+                                <!-- AIGC Hub -->
+                                <div class="bg-amber-500/10 border-2 border-amber-500 rounded-xl p-4 text-center max-w-3xl mx-auto">
+                                    <h5 class="text-xl font-bold text-amber-400">AI Governance Committee (AIGC)</h5>
+                                    <div class="text-left space-y-2 text-gray-300 mt-4">
+                                        <p><strong>Core Responsibilities:</strong></p>
+                                        <ul class="list-disc list-inside space-y-1 text-sm">
+                                            <li>Develop, approve, and maintain all organization-wide AI policies.</li>
+                                            <li>Review and provide binding recommendations on all "High-Risk" AI projects.</li>
+                                            <li>Maintain the organization-wide AI Inventory and Risk Registry.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <!-- Connecting Lines -->
+                                <div class="w-full h-8 border-l-2 border-r-2 border-b-2 border-gray-600 max-w-4xl mx-auto rounded-b-lg"></div>
+                                <!-- Functional Spokes -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-5xl mx-auto">
+                                    <div class="bg-gray-800/50 p-3 rounded-lg"><h6 class="font-bold text-white">Legal & Compliance</h6><p class="text-sm text-gray-400">Interprets regulations, advises on compliance, reviews contracts.</p></div>
+                                    <div class="bg-gray-800/50 p-3 rounded-lg"><h6 class="font-bold text-white">Risk Management</h6><p class="text-sm text-gray-400">Develops risk taxonomy, defines assessment criteria, challenges models.</p></div>
+                                    <div class="bg-gray-800/50 p-3 rounded-lg"><h6 class="font-bold text-white">Cybersecurity</h6><p class="text-sm text-gray-400">Defines security controls, assesses vendors, plans incident response.</p></div>
+                                    <div class="bg-gray-800/50 p-3 rounded-lg"><h6 class="font-bold text-white">Data Science & Tech</h6><p class="text-sm text-gray-400">Advises on feasibility, maintains model lifecycle standards.</p></div>
+                                    <div class="bg-gray-800/50 p-3 rounded-lg"><h6 class="font-bold text-white">Business Units</h6><p class="text-sm text-gray-400">Champion use cases, provide real-world feedback on performance.</p></div>
+                                    <div class="bg-gray-800/50 p-3 rounded-lg"><h6 class="font-bold text-white">HR & Ethics</h6><p class="text-sm text-gray-400">Develops ethical guidelines, assesses workforce impact, mitigates bias.</p></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div data-tab-content="validation" class="hidden scrollable-container">
+                             <h4 class="!mt-2">Hybrid Evaluation Framework</h4>
+                             <p class="text-center text-gray-400 mb-6">We use a multi-layered workflow to audit AI results, combining automated speed with human expertise for a fast, cost-effective, and highly reliable evaluation process.</p>
+                             <div class="flex items-center justify-between w-full text-center">
+                                <!-- Step 1 -->
+                                <div class="w-1/3">
+                                    <div class="mx-auto bg-sky-500/10 text-sky-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-sky-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v10a1 1 0 01-1 1H4a1 1 0 01-1-1V10zM15 10a1 1 0 011-1h5a1 1 0 011 1v5a1 1 0 01-1 1h-5a1 1 0 01-1-1v-5z"/></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Automated Screening</h5>
+                                    <p class="text-xs text-gray-400">Fast, automated tests screen for major regressions.</p>
+                                </div>
+                                <div class="flex-1 text-gray-600 text-2xl font-light">&rightarrow;</div>
+                                <!-- Step 2 -->
+                                <div class="w-1/3">
+                                    <div class="mx-auto bg-amber-500/10 text-amber-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-amber-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V3m0 18v-3M5.636 5.636l-1.414-1.414m15.556 15.556l-1.414-1.414M19.778 5.636l-1.414 1.414M4.222 19.778l-1.414 1.414M12 12a6 6 0 100-12 6 6 0 000 12z"/></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">AI-Assisted Comparison</h5>
+                                    <p class="text-xs text-gray-400">LLM-as-a-judge performs large-scale comparisons.</p>
+                                </div>
+                                <div class="flex-1 text-gray-600 text-2xl font-light">&rightarrow;</div>
+                                <!-- Step 3 -->
+                                <div class="w-1/3">
+                                    <div class="mx-auto bg-indigo-500/10 text-indigo-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-indigo-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Targeted Human Review</h5>
+                                    <p class="text-xs text-gray-400">Experts provide the final verdict on critical edge cases.</p>
+                                </div>
+                             </div>
+                             <hr class="border-gray-700 my-8">
+                             <h4 class="!mt-2">Built-in Risk Mitigation</h4>
                              <p class="text-center text-gray-400 mb-8">Click each card to learn how our architecture mitigates GenAI risks by design.</p>
                              <div class="grid md:grid-cols-2 gap-6">
                                 <div class="risk-card perspective-1000 group"><div class="risk-card-inner relative w-full h-48">
@@ -390,17 +455,95 @@
                              </div>
                         </div>
 
-                        <div data-tab-content="use-cases" class="hidden">
-                             <p class="text-center text-gray-400 mb-8">Filter by business function to see how GenAI can drive tangible value across the organization.</p>
-                             <div class="flex justify-center flex-wrap gap-2 mb-8" id="use-case-filters">
-                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="all">All</button>
-                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Wealth Management">Wealth</button>
-                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Risk & Compliance">Risk</button>
-                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Investment Research">Research</button>
-                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Operations">Ops</button>
-                                 <button class="filter-btn px-4 py-2 text-sm font-medium rounded-full shadow-sm transition-colors" data-filter="Executive Leadership">Execs</button>
-                             </div>
-                             <div id="use-case-gallery" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                        <div data-tab-content="factory" class="hidden scrollable-container">
+                            <h4 class="!mt-2">The Data Integration Factory: 5 Steps</h4>
+                            <p class="text-gray-400 text-center">Every new data source integration must proceed through these five steps to ensure quality, security, and speed.</p>
+                             <div class="flex items-center justify-between w-full mt-8 text-center">
+                                <!-- Step 1 -->
+                                <div class="w-1/5">
+                                    <div class="mx-auto bg-blue-500/10 text-blue-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-blue-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Step 1: Intake</h5>
+                                    <p class="text-xs text-gray-400">Define business value</p>
+                                </div>
+                                <div class="flex-1 text-gray-600 text-2xl font-light">&rightarrow;</div>
+                                <!-- Step 2 -->
+                                <div class="w-1/5">
+                                    <div class="mx-auto bg-green-500/10 text-green-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-green-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Step 2: Assess</h5>
+                                    <p class="text-xs text-gray-400">Conduct due diligence</p>
+                                </div>
+                                <div class="flex-1 text-gray-600 text-2xl font-light">&rightarrow;</div>
+                                <!-- Step 3 -->
+                                <div class="w-1/5">
+                                    <div class="mx-auto bg-purple-500/10 text-purple-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-purple-500/30">
+                                       <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Step 3: Develop</h5>
+                                    <p class="text-xs text-gray-400">Build ingestion pipeline</p>
+                                </div>
+                                <div class="flex-1 text-gray-600 text-2xl font-light">&rightarrow;</div>
+                                <!-- Step 4 -->
+                                <div class="w-1/5">
+                                    <div class="mx-auto bg-yellow-500/10 text-yellow-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-yellow-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Step 4: Certify</h5>
+                                    <p class="text-xs text-gray-400">Validate and deploy</p>
+                                </div>
+                                <div class="flex-1 text-gray-600 text-2xl font-light">&rightarrow;</div>
+                                <!-- Step 5 -->
+                                <div class="w-1/5">
+                                    <div class="mx-auto bg-red-500/10 text-red-400 rounded-full h-16 w-16 flex items-center justify-center border-2 border-red-500/30">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
+                                    </div>
+                                    <h5 class="font-bold text-white mt-2 text-sm">Step 5: Operate</h5>
+                                    <p class="text-xs text-gray-400">Monitor and maintain</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div data-tab-content="flywheel" class="hidden">
+                             <div class="text-center p-4">
+                                <h4 class="text-xl font-bold text-white">From Core Initiative to Organization Impact</h4>
+                                <p class="text-gray-400 mb-8">We start by solving a core IT problem, which creates momentum and unlocks future business possibilities.</p>
+                                <div class="relative flex items-center justify-center h-96">
+                                    <!-- Rings -->
+                                    <div class="absolute rounded-full border-2 border-dashed border-indigo-500/30 w-96 h-96"></div>
+                                    <div class="absolute rounded-full border-2 border-dashed border-sky-500/40 w-64 h-64"></div>
+                                    
+                                    <!-- Core -->
+                                    <div class="absolute flex flex-col items-center justify-center bg-amber-600 text-white rounded-full w-40 h-40 shadow-lg z-10 p-2">
+                                        <h5 class="font-bold text-center leading-tight">Core Initiative</h5>
+                                        <p class="text-xs text-center mt-1 text-amber-100">AI-Accelerated Data Integration</p>
+                                    </div>
+
+                                    <!-- Middle Ring: Capabilities -->
+                                    <div class="absolute w-64 h-64 flex items-center justify-center" style="transform: rotate(0deg);">
+                                        <div class="absolute top-0 transform -translate-y-1/2 bg-sky-600 text-white text-xs rounded-full px-3 py-1 shadow text-center">Conversational<br>Data Exploration</div>
+                                    </div>
+                                    <div class="absolute w-64 h-64 flex items-center justify-center" style="transform: rotate(120deg);">
+                                        <div class="absolute top-0 transform -translate-y-1/2 bg-sky-600 text-white text-xs rounded-full px-3 py-1 shadow text-center">Rapid BI<br>Prototyping</div>
+                                    </div>
+                                     <div class="absolute w-64 h-64 flex items-center justify-center" style="transform: rotate(240deg);">
+                                        <div class="absolute top-0 transform -translate-y-1/2 bg-sky-600 text-white text-xs rounded-full px-3 py-1 shadow text-center">Automated<br>Data Quality</div>
+                                    </div>
+
+                                    <!-- Outer Ring: Outcomes -->
+                                    <div class="absolute w-96 h-96 flex items-center justify-center" style="transform: rotate(60deg);">
+                                        <div class="absolute top-0 transform -translate-y-1/2 bg-indigo-600 text-white text-xs rounded-full px-3 py-1 shadow">Democratize Data Insights</div>
+                                    </div>
+                                    <div class="absolute w-96 h-96 flex items-center justify-center" style="transform: rotate(180deg);">
+                                        <div class="absolute top-0 transform -translate-y-1/2 bg-indigo-600 text-white text-xs rounded-full px-3 py-1 shadow">Accelerate AI/ML Development</div>
+                                    </div>
+                                     <div class="absolute w-96 h-96 flex items-center justify-center" style="transform: rotate(300deg);">
+                                        <div class="absolute top-0 transform -translate-y-1/2 bg-indigo-600 text-white text-xs rounded-full px-3 py-1 shadow">Drive Operational Efficiency</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -411,30 +554,22 @@
             <div class="container mx-auto px-6 w-full max-w-4xl scrollable-container h-full overflow-y-auto py-24">
                 <div class="text-center mb-12">
                     <h3 class="text-3xl font-bold text-white mb-3">The Phased <span class="gradient-text">Implementation Roadmap</span></h3>
-                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">A detailed, multi-year view of how the Generative AI initiative will scale across the enterprise, building compounding value over time.</p>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">A pragmatic, phased approach focused on delivering measurable IT efficiency first, then scaling business value across the organization.</p>
                 </div>
                 <div class="mx-auto">
                     <div class="relative pl-8">
                         <!-- Phase 1 -->
                         <div class="timeline-item mb-12">
                             <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
-                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 1: Foundational Readiness & Governance</h4>
-                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 1-6)</p>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 1: Build the Factory Foundation</h4>
+                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 1-3)</p>
                             <div class="glass-card p-6 space-y-4">
-                                <div>
-                                    <h5 class="font-bold text-white">Objective</h5>
-                                    <p class="text-gray-400 text-sm">To build the non-negotiable technical and governance bedrock for all future AI success, focusing on IT and risk management.</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-white">Target Departments</h5>
-                                    <p class="text-gray-400 text-sm">Information Technology, Compliance, Legal, Risk.</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                <div><h5 class="font-bold text-white">Objective</h5><p class="text-gray-400 text-sm">Establish the governance and processes for the Data Factory and prove its effectiveness with a single, high-value pilot integration pipeline.</p></div>
+                                <div><h5 class="font-bold text-white">Key Deliverables</h5>
                                     <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
-                                        <li>AI Governance Committee established and chartered.</li>
-                                        <li>Pilot AI-assisted data integration pipeline executed.</li>
-                                        <li>"Factory Model" Playbook v1.0 for scalable data integration.</li>
+                                        <li><b>AIGC Established:</b> AI Governance Committee is chartered and key members are assigned.</li>
+                                        <li><b>Data Factory Playbook:</b> The standard operating procedure for data integration is defined and approved.</li>
+                                        <li><b>Pilot Integration Complete:</b> Onboard one new data source using the playbook, measuring baseline metrics.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -443,73 +578,32 @@
                         <!-- Phase 2 -->
                         <div class="timeline-item mb-12">
                             <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
-                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 2: Initial Value Realization</h4>
-                             <p class="text-amber-400 font-medium text-sm mb-3">(Months 6-12)</p>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 2: Scale the Factory & Show Business Value</h4>
+                             <p class="text-amber-400 font-medium text-sm mb-3">(Months 3-6)</p>
                             <div class="glass-card p-6 space-y-4">
-                                <div>
-                                    <h5 class="font-bold text-white">Objective</h5>
-                                    <p class="text-gray-400 text-sm">To deploy the first wave of high-impact applications, building trust and proving the reusability of the architecture.</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-white">Target Departments</h5>
-                                    <p class="text-gray-400 text-sm">Compliance, Investment Research, Wealth Management.</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                <div><h5 class="font-bold text-white">Objective</h5><p class="text-gray-400 text-sm">Move from a successful pilot to proven value by scaling the Data Factory, quantifying its ROI, and using the newly available data to launch the first high-impact business intelligence project.</p></div>
+                                <div><h5 class="font-bold text-white">Key Deliverables</h5>
                                     <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
-                                        <li>Compliance Research Assistant (RAG Application) deployed.</li>
-                                        <li>Automated Earnings Call Summaries for Investment Research.</li>
-                                        <li>Conversational Analytics Pilot for select Wealth Advisors.</li>
+                                        <li><b>Prove Scalability:</b> Onboard 3-5 new, high-priority data sources using the factory model to clear the existing backlog.</li>
+                                        <li><b>Quantify ROI:</b> Launch a live ROI dashboard tracking the reduction in integration time and engineering effort.</li>
+                                        <li><b>Deliver First Business Win:</b> Empower the highest-impact department with a Conversational BI pilot, allowing them to ask questions of their new data in plain English.</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Phase 3 -->
-                        <div class="timeline-item mb-12">
-                            <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
-                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 3: Enterprise Scaling & Optimization</h4>
-                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 12-24)</p>
-                            <div class="glass-card p-6 space-y-4">
-                                <div>
-                                    <h5 class="font-bold text-white">Objective</h5>
-                                    <p class="text-gray-400 text-sm">To scale proven AI patterns to other business units and deliver proactive insights to senior leadership.</p>
-                                </div>
-                                 <div>
-                                    <h5 class="font-bold text-white">Target Departments</h5>
-                                    <p class="text-gray-400 text-sm">Operations, Executive Leadership, Commercial Lending.</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-white">Key Deliverables</h5>
-                                    <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
-                                        <li>Automated AML Alert Triage for Operations.</li>
-                                        <li>Conversational BI for Executive Leadership via Tableau Pulse.</li>
-                                        <li>Enhanced Credit Risk Model Pilot for Commercial Lending.</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Phase 4 -->
                         <div class="timeline-item">
                             <div class="timeline-dot border-4 border-gray-900 rounded-full"></div>
-                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 4: Continuous Innovation & Maturation</h4>
-                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 24+)</p>
+                            <h4 class="text-xl font-semibold text-white mb-1 pt-2">Phase 3: Democratize Data & Advanced Insights</h4>
+                            <p class="text-amber-400 font-medium text-sm mb-3">(Months 6-12)</p>
                             <div class="glass-card p-6 space-y-4">
-                                 <div>
-                                    <h5 class="font-bold text-white">Objective</h5>
-                                    <p class="text-gray-400 text-sm">To embed GenAI as a core capability and explore advanced applications that create a sustainable competitive advantage.</p>
-                                </div>
-                                 <div>
-                                    <h5 class="font-bold text-white">Target Departments</h5>
-                                    <p class="text-gray-400 text-sm">All, including M&A and Corporate Strategy.</p>
-                                </div>
-                                <div>
-                                    <h5 class="font-bold text-white">Key Deliverables</h5>
+                                 <div><h5 class="font-bold text-white">Objective</h5><p class="text-gray-400 text-sm">Scale proven AI capabilities across the organization to democratize data access and develop more advanced, predictive insights.</p></div>
+                                <div><h5 class="font-bold text-white">Key Deliverables</h5>
                                     <ul class="list-disc list-inside text-gray-300 text-sm mt-2 space-y-1">
-                                        <li>Enterprise-wide "AI Co-pilot" availability.</li>
-                                        <li>Automated Due Diligence for M&A team.</li>
-                                        <li>Exploration of custom Cortex Agents for complex tasks.</li>
+                                        <li><b>Organization Rollout of Conversational BI:</b> Expand access to Tableau's natural language features to all business lines.</li>
+                                        <li><b>Launch Proactive Insights:</b> Deploy Tableau Pulse to deliver automated, proactive alerts on KPI changes to key stakeholders.</li>
+                                        <li><b>Develop First Custom AI Model:</b> Utilize the rich, integrated data to build a custom model for a key business problem (e.g., client churn prediction, market forecasting).</li>
                                     </ul>
                                 </div>
                             </div>
@@ -523,24 +617,24 @@
             <div class="container mx-auto px-6 w-full max-w-6xl scrollable-container h-full overflow-y-auto py-24">
                 <div class="text-center mb-12">
                     <h3 class="text-3xl font-bold text-white mb-3">Projected Business Impact & <span class="gradient-text">ROI Dashboard</span></h3>
-                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">Our success framework is built on quantifiable metrics, tracking leading indicators that drive top-line business outcomes and overall ROI.</p>
+                    <p class="text-lg text-gray-400 max-w-3xl mx-auto">This initiative is measured by concrete IT efficiency gains that directly translate into accelerated business value.</p>
                 </div>
                 <div class="mx-auto grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
                     <div class="glass-card p-6">
-                        <h4 class="text-xl font-semibold text-center text-white mb-4">Key Performance Indicators (Y2 Targets)</h4>
+                        <h4 class="text-xl font-semibold text-center text-white mb-4">Core Initiative KPIs (Y1 Targets)</h4>
                         <div class="space-y-4">
-                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">EFFICIENCY</p><p class="text-4xl font-extrabold text-amber-400">>50%</p><p class="text-white font-semibold">Faster Time-to-Insight</p></div>
-                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">COST REDUCTION</p><p class="text-4xl font-extrabold text-amber-400">~30%</p><p class="text-white font-semibold">Lower Data Operations TCO</p></div>
-                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">RISK MITIGATION</p><p class="text-4xl font-extrabold text-amber-400">>80%</p><p class="text-white font-semibold">Faster Compliance Research</p></div>
+                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">EFFICIENCY</p><p class="text-4xl font-extrabold text-amber-400">>70%</p><p class="text-white font-semibold">Reduction in Time-to-Value for New Data</p></div>
+                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">PRODUCTIVITY</p><p class="text-4xl font-extrabold text-amber-400">>40%</p><p class="text-white font-semibold">Increase in Data Engineering Capacity</p></div>
+                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">GOVERNANCE</p><p class="text-4xl font-extrabold text-amber-400">100%</p><p class="text-white font-semibold">of New Sources Adhere to Factory Playbook</p></div>
                         </div>
                     </div>
                      <div class="glass-card p-6 space-y-8">
                         <div>
-                            <h4 class="text-xl font-semibold text-center text-white mb-4">Productivity: Data Pipeline Development</h4>
+                            <h4 class="text-xl font-semibold text-center text-white mb-4">Data Integration Time: Before vs. After</h4>
                             <div class="chart-container" style="height: 250px; max-height: 250px;"><canvas id="roiChart"></canvas></div>
                         </div>
                         <div>
-                            <h4 class="text-xl font-semibold text-center text-white mb-4">Sources of Projected >40% ROI</h4>
+                            <h4 class="text-xl font-semibold text-center text-white mb-4">Sources of Projected ROI</h4>
                             <div class="chart-container" style="height: 250px; max-height: 250px;"><canvas id="roiBreakdownChart"></canvas></div>
                         </div>
                     </div>
@@ -568,87 +662,90 @@
     </div>
 
     <!-- Mermaid Modal -->
-    <div id="mermaid-modal" class="mermaid-modal-overlay">
-        <div class="mermaid-modal-content scrollable-container">
-            <button id="close-mermaid-modal" class="mermaid-modal-close">&times;</button>
-            <h3 class="text-2xl font-bold text-white text-center mb-6">Detailed End-to-End Data Flow</h3>
-            <pre class="mermaid">
-                flowchart TD
-                    subgraph "Data Sources"
-                        direction LR
-                        A["Structured Data<br/>(Databases, ERPs, CRMs)"]
-                        B["Unstructured Data<br/>(PDFs, Images, Audio)"]
-                        C["Streaming Data<br/>(IoT, CDC, Events)"]
-                        D["Batch Files<br/>(CSVs, JSON, Parquet)"]
-                    end
+    <div id="mermaid-modal" class="info-modal-overlay">
+        <div class="info-modal-content">
+            <div class="info-modal-header">
+                <h3 class="text-2xl font-bold text-white text-center">Detailed End-to-End Data Flow</h3>
+                <button id="close-mermaid-modal" class="info-modal-close">&times;</button>
+            </div>
+            <div class="info-modal-body scrollable-container">
+                <pre class="mermaid">
+                    flowchart TD
+                        subgraph "Data Sources"
+                            direction LR
+                            A["Structured Data<br/>(Databases, ERPs, CRMs)"]
+                            B["Unstructured Data<br/>(PDFs, Images, Audio)"]
+                            C["Streaming Data<br/>(IoT, CDC, Events)"]
+                            D["Batch Files<br/>(CSVs, JSON, Parquet)"]
+                        end
 
-                    subgraph "Ingestion Layer"
-                        direction TB
-                        E["Snowpipe Streaming API<br/>Low-Latency Ingestion"]
-                        F["Snowpipe<br/>Automated Bulk Ingestion"]
-                        G["Cloud Storage<br/>(S3, Azure Blob, GCS)<br/>Staging Area"]
-                    end
+                        subgraph "Ingestion Layer"
+                            direction TB
+                            E["Snowpipe Streaming API<br/>Low-Latency Ingestion"]
+                            F["Snowpipe<br/>Automated Bulk Ingestion"]
+                            G["Cloud Storage<br/>(S3, Azure Blob, GCS)<br/>Staging Area"]
+                        end
 
-                    subgraph "Snowflake Cloud Data Platform"
-                        direction TB
-                        H["Raw Data Tables<br/>Landing Zone"]
-                        I["Snowpark<br/>(Python, Java, Scala)<br/>Transformation & Unstructured Data Processing"]
-                        J["Snowflake Cortex AI<br/>Sentiment, Summary, Forecast"]
-                        K["Fine-Tuned Models<br/>Custom AI/ML"]
-                        L["Processed & Enriched Data<br/>Analytics-Ready Tables & Views"]
-                    end
+                        subgraph "Snowflake Cloud Data Platform"
+                            direction TB
+                            H["Raw Data Tables<br/>Landing Zone"]
+                            I["Snowpark<br/>(Python, Java, Scala)<br/>Transformation & Unstructured Data Processing"]
+                            J["Snowflake Cortex AI<br/>Sentiment, Summary, Forecast"]
+                            K["Fine-Tuned Models<br/>Custom AI/ML"]
+                            L["Processed & Enriched Data<br/>Analytics-Ready Tables & Views"]
+                        end
 
-                    subgraph "Visualization & BI Layer"
-                        direction TB
-                        M["Tableau<br/>Live Connection"]
-                        N["Tableau AI & Einstein<br/>Natural Language Queries & Predictive Insights"]
-                        O["Real-Time Dashboards<br/>Interactive Visualizations"]
-                    end
+                        subgraph "Visualization & BI Layer"
+                            direction TB
+                            M["Tableau<br/>Live Connection"]
+                            N["Tableau AI & Einstein<br/>Natural Language Queries & Predictive Insights"]
+                            O["Real-Time Dashboards<br/>Interactive Visualizations"]
+                        end
 
-                    %% Data Flow Connections
-                    A --> F
-                    B --> G
-                    D --> G
-                    G --> F
-                    C --> E
+                        %% Data Flow Connections
+                        A --> F
+                        B --> G
+                        D --> G
+                        G --> F
+                        C --> E
 
-                    E --> H
-                    F --> H
+                        E --> H
+                        F --> H
 
-                    H --> I
-                    I --> L
-                    L --> J
-                    L --> K
-                    J --> L
-                    K --> L
+                        H --> I
+                        I --> L
+                        L --> J
+                        L --> K
+                        J --> L
+                        K --> L
 
-                    L --> M
-                    M --> N
-                    N --> O
+                        L --> M
+                        M --> N
+                        N --> O
 
-                    %% Styling
-                    style A fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
-                    style B fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
-                    style C fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
-                    style D fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                        %% Styling
+                        style A fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                        style B fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                        style C fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
+                        style D fill:#cde4ff,stroke:#6699ff,stroke-width:2px,color:#111827
 
-                    style E fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#111827
-                    style F fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#111827
-                    style G fill:#fff2cc,stroke:#d6b656,stroke-width:2px,color:#111827
+                        style E fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#111827
+                        style F fill:#d5e8d4,stroke:#82b366,stroke-width:2px,color:#111827
+                        style G fill:#fff2cc,stroke:#d6b656,stroke-width:2px,color:#111827
 
-                    style H fill:#f8cecc,stroke:#b85450,stroke-width:2px,color:#111827
-                    style I fill:#f5f5f5,stroke:#666666,stroke-width:2px,color:#111827
-                    style J fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,color:#111827
-                    style K fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,color:#111827
-                    style L fill:#e1d5e7,stroke:#9673a6,stroke-width:2px,color:#111827
+                        style H fill:#f8cecc,stroke:#b85450,stroke-width:2px,color:#111827
+                        style I fill:#f5f5f5,stroke:#666666,stroke-width:2px,color:#111827
+                        style J fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,color:#111827
+                        style K fill:#dae8fc,stroke:#6c8ebf,stroke-width:2px,color:#111827
+                        style L fill:#e1d5e7,stroke:#9673a6,stroke-width:2px,color:#111827
 
-                    style M fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
-                    style N fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
-                    style O fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
-            </pre>
+                        style M fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
+                        style N fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
+                        style O fill:#ffcc99,stroke:#d79b00,stroke-width:2px,color:#111827
+                </pre>
+            </div>
         </div>
     </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -663,47 +760,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     gsap.registerPlugin(ScrollTrigger);
-
-    const useCaseData = [
-        { function: 'Wealth Management', case: 'Personalized Client Reporting & Insights', outcome: 'Increased client engagement and retention; improved advisor productivity.' },
-        { function: 'Investment Research', case: 'Automated Earnings Call Summaries & Trend Analysis', outcome: 'Accelerated time-to-insight for analysts; broader coverage of securities.' },
-        { function: 'Risk & Compliance', case: 'AI-Powered Compliance Research Assistant', outcome: 'Reduced time for regulatory research by 80%+; improved compliance consistency and auditability.' },
-        { function: 'Operations', case: 'Automated AML Alert Triage & Summarization', outcome: 'Reduced false positive investigation time; lower operational costs; focus on high-risk alerts.' },
-        { function: 'Executive Leadership', case: 'Conversational BI & Strategic Dashboards', outcome: 'Democratized access to data; faster, more informed strategic decision-making.' }
-    ];
-
-    const useCaseGallery = document.getElementById('use-case-gallery');
-    const filterContainer = document.getElementById('use-case-filters');
-
-    function renderUseCases(filter = 'all') {
-        if (!useCaseGallery) return;
-        useCaseGallery.innerHTML = '';
-        const filteredData = filter === 'all' 
-            ? useCaseData 
-            : useCaseData.filter(item => item.function === filter);
-
-        filteredData.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'glass-card p-4 rounded-lg border-gray-700/50 transition-all duration-300 hover:border-amber-500/50';
-            card.innerHTML = `
-                <p class="text-sm font-semibold text-amber-500 mb-1">${item.function}</p>
-                <h5 class="font-bold text-white mb-2 text-base">${item.case}</h5>
-                <p class="text-sm text-gray-400">${item.outcome}</p>`;
-            useCaseGallery.appendChild(card);
-        });
-    }
-
-    if(filterContainer) {
-        filterContainer.addEventListener('click', (e) => {
-            if (e.target.tagName === 'BUTTON') {
-                document.querySelectorAll('#use-case-filters .filter-btn').forEach(btn => btn.classList.remove('active'));
-                e.target.classList.add('active');
-                renderUseCases(e.target.dataset.filter);
-            }
-        });
-    }
     
-
     const tabs = document.querySelectorAll('.tab');
     const tabContents = document.querySelectorAll('[data-tab-content]');
     tabs.forEach(tab => {
@@ -732,7 +789,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     if(tabs && tabs.length > 0) tabs[0].click();
-    if(filterContainer) filterContainer.querySelector('[data-filter="all"]').click();
 
     // Chart.js Dark Theme Defaults
     Chart.defaults.color = '#9ca3af'; // Gray 400
@@ -769,10 +825,10 @@ document.addEventListener('DOMContentLoaded', () => {
             roiChartInstance = new Chart(roiCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Manual Process', 'AI-Assisted Process'],
+                    labels: ['Manual Integration', 'AI-Powered Factory'],
                     datasets: [{
-                        label: 'Avg. Pipeline Development Time (Hours)',
-                        data: [40, 18],
+                        label: 'Avg. Time to BI-Ready Data (Weeks)',
+                        data: [8, 2],
                         backgroundColor: ['#4b5563', '#d97706'],
                         borderColor: ['#6b7280', '#b45309'],
                         borderWidth: 1
@@ -780,7 +836,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 options: { ...commonChartOptions,
                     indexAxis: 'y',
-                    scales: { x: { beginAtZero: true, grid: { color: '#374151' }, title: { display: true, text: 'Hours', color: '#9ca3af' } }, y: { grid: { display: false } } }
+                    scales: { x: { beginAtZero: true, grid: { color: '#374151' }, title: { display: true, text: 'Weeks', color: '#9ca3af' } }, y: { grid: { display: false } } }
                 }
             });
         }
@@ -790,10 +846,10 @@ document.addEventListener('DOMContentLoaded', () => {
             roiBreakdownChartInstance = new Chart(roiBreakdownCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Cost Savings', 'Risk Reduction', 'Productivity Lift'],
+                    labels: ['Engineer Productivity Lift', 'Faster Business Insights', 'Reduced Rework & Errors'],
                     datasets: [{
                         label: 'Source of ROI',
-                        data: [40, 35, 25],
+                        data: [50, 35, 15],
                         backgroundColor: ['#b45309', '#d97706', '#f59e0b'],
                         borderColor: '#111827',
                         borderWidth: 4,
@@ -906,53 +962,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Mermaid Modal Logic
-    const openModalBtn = document.getElementById('open-mermaid-modal');
-    const closeModalBtn = document.getElementById('close-mermaid-modal');
-    const modalOverlay = document.getElementById('mermaid-modal');
+    const openMermaidModalBtn = document.getElementById('open-mermaid-modal');
+    const closeMermaidModalBtn = document.getElementById('close-mermaid-modal');
+    const mermaidModalOverlay = document.getElementById('mermaid-modal');
     const mermaidContainer = document.querySelector('.mermaid');
     let mermaidRendered = false;
 
-    async function openModal() {
-        if (modalOverlay) {
-            modalOverlay.classList.add('visible');
-            // Only render mermaid if it hasn't been rendered yet
+    async function openMermaidModal() {
+        if (mermaidModalOverlay) {
+            mermaidModalOverlay.classList.add('visible');
             if (!mermaidRendered) {
                 try {
-                    // Force a re-render of the diagram inside the now-visible modal
-                    await mermaid.run({
-                        nodes: [mermaidContainer]
-                    });
-                    mermaidRendered = true; // Mark as rendered
+                    await mermaid.run({ nodes: [mermaidContainer] });
+                    mermaidRendered = true;
                 } catch (e) {
                     console.error("Error rendering mermaid diagram:", e);
-                    mermaidContainer.innerHTML = "Error rendering diagram. Please check the console.";
+                    mermaidContainer.innerHTML = "Error rendering diagram.";
                 }
             }
         }
     }
 
-    function closeModal() {
-        if (modalOverlay) {
-            modalOverlay.classList.remove('visible');
-        }
+    function closeMermaidModal() {
+        if (mermaidModalOverlay) mermaidModalOverlay.classList.remove('visible');
     }
 
-    if (openModalBtn) {
-        openModalBtn.addEventListener('click', openModal);
-    }
-    if (closeModalBtn) {
-        closeModalBtn.addEventListener('click', closeModal);
-    }
-    if (modalOverlay) {
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                closeModal();
-            }
-        });
-    }
+    if (openMermaidModalBtn) openMermaidModalBtn.addEventListener('click', openMermaidModal);
+    if (closeMermaidModalBtn) closeMermaidModalBtn.addEventListener('click', closeMermaidModal);
+    if (mermaidModalOverlay) mermaidModalOverlay.addEventListener('click', (e) => { if (e.target === mermaidModalOverlay) closeMermaidModal(); });
+    
+    // Global Escape key handler for modals
     window.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape' && modalOverlay.classList.contains('visible')) {
-            closeModal();
+        if (e.key === 'Escape') {
+            if (mermaidModalOverlay && mermaidModalOverlay.classList.contains('visible')) closeMermaidModal();
         }
     });
 });
