@@ -232,17 +232,17 @@
         }
         .mermaid { text-align: center; }
         
-        #tab-content h4 {
+        #tab-content h4, #impact-tabs-content h4 {
             font-size: 1.25rem;
             font-weight: 700;
             color: #f59e0b;
             margin-top: 1.5rem;
             margin-bottom: 0.5rem;
         }
-        #tab-content p, #tab-content li { line-height: 1.65; }
-        #tab-content p { margin-bottom: 1rem; }
-        #tab-content ul { list-style-position: inside; list-style-type: disc; margin-left: 0.5rem; margin-bottom: 1rem; }
-        #tab-content li { margin-bottom: 0.5rem; }
+        #tab-content p, #tab-content li, #impact-tabs-content p, #impact-tabs-content li { line-height: 1.65; }
+        #tab-content p, #impact-tabs-content p { margin-bottom: 1rem; }
+        #tab-content ul, #impact-tabs-content ul { list-style-position: inside; list-style-type: disc; margin-left: 0.5rem; margin-bottom: 1rem; }
+        #tab-content li, #impact-tabs-content li { margin-bottom: 0.5rem; }
     </style>
 </head>
 <body class="text-gray-300">
@@ -255,7 +255,7 @@
                 <a href="#opportunity" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Opportunity</a>
                 <a href="#blueprint" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Blueprint</a>
                 <a href="#roadmap" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Roadmap</a>
-                <a href="#roi" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Business Impact</a>
+                <a href="#impact" class="nav-link text-gray-400 hover:text-amber-400 transition-colors">Business Impact</a>
             </div>
         </nav>
     </header>
@@ -613,29 +613,45 @@
             </div>
         </section>
 
-        <section id="roi" class="bg-gray-900">
+        <section id="impact">
             <div class="container mx-auto px-6 w-full max-w-6xl scrollable-container h-full overflow-y-auto py-24">
                 <div class="text-center mb-12">
-                    <h3 class="text-3xl font-bold text-white mb-3">Projected Business Impact & <span class="gradient-text">ROI Dashboard</span></h3>
+                    <h3 class="text-3xl font-bold text-white mb-3">Phased Business Impact & <span class="gradient-text">ROI</span></h3>
                     <p class="text-lg text-gray-400 max-w-3xl mx-auto">This initiative is measured by concrete IT efficiency gains that directly translate into accelerated business value.</p>
                 </div>
-                <div class="mx-auto grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                    <div class="glass-card p-6">
-                        <h4 class="text-xl font-semibold text-center text-white mb-4">Core Initiative KPIs (Y1 Targets)</h4>
-                        <div class="space-y-4">
-                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">EFFICIENCY</p><p class="text-4xl font-extrabold text-amber-400">>70%</p><p class="text-white font-semibold">Reduction in Time-to-Value for New Data</p></div>
-                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">PRODUCTIVITY</p><p class="text-4xl font-extrabold text-amber-400">>40%</p><p class="text-white font-semibold">Increase in Data Engineering Capacity</p></div>
-                           <div class="kpi-card p-4 rounded-lg shadow-sm"><p class="text-gray-400 text-sm font-medium">GOVERNANCE</p><p class="text-4xl font-extrabold text-amber-400">100%</p><p class="text-white font-semibold">of New Sources Adhere to Factory Playbook</p></div>
-                        </div>
+                <div class="w-full mx-auto glass-card p-4 sm:p-8">
+                    <div id="impact-tabs" class="flex border-b border-gray-700 mb-8">
+                        <button data-impact-tab="p1" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 transition-colors duration-300">Phase 1 Impact</button>
+                        <button data-impact-tab="p2" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Phase 2 Impact</button>
+                        <button data-impact-tab="p3" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Phase 3 Impact</button>
+                        <button data-impact-tab="overall" class="tab flex-1 py-3 px-1 text-center font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-300 transition-colors duration-300">Overall ROI</button>
                     </div>
-                     <div class="glass-card p-6 space-y-8">
-                        <div>
-                            <h4 class="text-xl font-semibold text-center text-white mb-4">Data Integration Time: Before vs. After</h4>
-                            <div class="chart-container" style="height: 250px; max-height: 250px;"><canvas id="roiChart"></canvas></div>
+                    <div id="impact-tabs-content">
+                        <div data-impact-tab-content="p1">
+                            <h4 class="!mt-2 text-center">Foundational Value</h4>
+                             <div class="grid md:grid-cols-2 gap-6 text-center mt-6">
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">AIGC</p><p class="text-4xl font-extrabold text-amber-400">Established</p><p class="text-white font-semibold">Chartered & staffed</p></div>
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">PLAYBOOK</p><p class="text-4xl font-extrabold text-amber-400">Published</p><p class="text-white font-semibold">Version 1.0 Approved</p></div>
+                             </div>
                         </div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-center text-white mb-4">Sources of Projected ROI</h4>
-                            <div class="chart-container" style="height: 250px; max-height: 250px;"><canvas id="roiBreakdownChart"></canvas></div>
+                        <div data-impact-tab-content="p2" class="hidden">
+                            <h4 class="!mt-2 text-center">Initial Efficiency Gains & Business Win</h4>
+                             <div class="grid md:grid-cols-3 gap-6 text-center mt-6">
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">DATA SOURCES</p><p class="text-4xl font-extrabold text-amber-400">3-5</p><p class="text-white font-semibold">Onboarded via Factory</p></div>
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">ROI DASHBOARD</p><p class="text-4xl font-extrabold text-amber-400">Live</p><p class="text-white font-semibold">Tracking Efficiency</p></div>
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">BI PILOT</p><p class="text-4xl font-extrabold text-amber-400">Launched</p><p class="text-white font-semibold">For Highest-Impact Team</p></div>
+                             </div>
+                        </div>
+                        <div data-impact-tab-content="p3" class="hidden">
+                            <h4 class="!mt-2 text-center">Democratized Insights</h4>
+                             <div class="grid md:grid-cols-2 gap-6 text-center mt-6">
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">CONVERSATIONAL BI</p><p class="text-4xl font-extrabold text-amber-400">>50%</p><p class="text-white font-semibold">Deployed to Business Lines</p></div>
+                                <div class="kpi-card p-4 rounded-lg"><p class="text-gray-400 text-sm font-medium">PROACTIVE ALERTS</p><p class="text-4xl font-extrabold text-amber-400">Live</p><p class="text-white font-semibold">Tableau Pulse Deployed</p></div>
+                             </div>
+                        </div>
+                        <div data-impact-tab-content="overall" class="hidden">
+                            <h4 class="!mt-2 text-center">Compounding Value Over Time</h4>
+                            <div class="chart-container" style="height: 300px; max-height: 300px;"><canvas id="valueOverTimeChart"></canvas></div>
                         </div>
                     </div>
                 </div>
@@ -689,7 +705,7 @@
                         subgraph "Snowflake Cloud Data Platform"
                             direction TB
                             H["Raw Data Tables<br/>Landing Zone"]
-                            I["Snowpark<br/>(Python, Java, Scala)<br/>Transformation & Unstructured Data Processing"]
+                            I["Snowpark (Python, Java, Scala)<br/>Transformation &<br/>Unstructured Data Processing"]
                             J["Snowflake Cortex AI<br/>Sentiment, Summary, Forecast"]
                             K["Fine-Tuned Models<br/>Custom AI/ML"]
                             L["Processed & Enriched Data<br/>Analytics-Ready Tables & Views"]
@@ -698,7 +714,7 @@
                         subgraph "Visualization & BI Layer"
                             direction TB
                             M["Tableau<br/>Live Connection"]
-                            N["Tableau AI & Einstein<br/>Natural Language Queries & Predictive Insights"]
+                            N["Tableau AI & Einstein<br/>Natural Language Queries<br/>& Predictive Insights"]
                             O["Real-Time Dashboards<br/>Interactive Visualizations"]
                         end
 
@@ -761,25 +777,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     gsap.registerPlugin(ScrollTrigger);
     
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('[data-tab-content]');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            const target = tab.dataset.tab;
-            tabs.forEach(t => {
-                t.classList.remove('active');
-                t.classList.add('text-gray-500', 'hover:text-gray-300', 'border-transparent');
-            });
-            tab.classList.add('active');
-            tab.classList.remove('text-gray-500', 'hover:text-gray-300', 'border-transparent');
-            tabContents.forEach(content => {
-                content.style.opacity = 0;
-                content.classList.add('hidden');
-            });
-            const activeContent = document.querySelector(`[data-tab-content="${target}"]`);
-            activeContent.classList.remove('hidden');
-            setTimeout(() => activeContent.style.opacity = 1, 50);
-            activeContent.style.transition = 'opacity 0.3s ease-in-out';
+    const allTabs = document.querySelectorAll('.tab');
+    allTabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            const isBlueprintTab = e.target.closest('#blueprint');
+            const isImpactTab = e.target.closest('#impact');
+            
+            let tabs, tabContents;
+            let targetAttr, contentAttr;
+
+            if (isBlueprintTab) {
+                tabs = document.querySelectorAll('#blueprint .tab');
+                tabContents = document.querySelectorAll('#blueprint [data-tab-content]');
+                targetAttr = 'data-tab';
+                contentAttr = 'data-tab-content';
+            } else if (isImpactTab) {
+                tabs = document.querySelectorAll('#impact .tab');
+                tabContents = document.querySelectorAll('#impact [data-impact-tab-content]');
+                targetAttr = 'data-impact-tab';
+                contentAttr = 'data-impact-tab-content';
+            }
+
+            if (tabs && tabContents) {
+                const target = e.target.getAttribute(targetAttr);
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.classList.add('text-gray-500', 'hover:text-gray-300', 'border-transparent');
+                });
+                e.target.classList.add('active');
+                e.target.classList.remove('text-gray-500', 'hover:text-gray-300', 'border-transparent');
+                
+                tabContents.forEach(content => {
+                    const contentTarget = content.getAttribute(contentAttr);
+                    content.style.opacity = 0;
+                    content.classList.add('hidden');
+                    if (contentTarget === target) {
+                        content.classList.remove('hidden');
+                        setTimeout(() => content.style.opacity = 1, 50);
+                        content.style.transition = 'opacity 0.3s ease-in-out';
+                    }
+                });
+            }
         });
     });
 
@@ -788,7 +826,9 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', () => card.classList.toggle('is-flipped'));
     });
     
-    if(tabs && tabs.length > 0) tabs[0].click();
+    document.querySelector('#blueprint .tab').click();
+    document.querySelector('#impact .tab').click();
+
 
     // Chart.js Dark Theme Defaults
     Chart.defaults.color = '#9ca3af'; // Gray 400
@@ -798,9 +838,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const commonChartOptions = {
         responsive: true,
         maintainAspectRatio: false,
-        animation: false, // Turn off default chart animation, GSAP will handle it
+        animation: false, 
         plugins: {
-            legend: { display: false },
+            legend: { position: 'bottom', labels: { color: '#9ca3af', boxWidth: 12, padding: 15 } },
             tooltip: {
                 enabled: true,
                 mode: 'index',
@@ -812,12 +852,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 borderWidth: 1,
                 padding: 10,
                 cornerRadius: 8,
-                displayColors: false
             }
         }
     };
     
-    let roiChartInstance, roiBreakdownChartInstance;
+    let roiChartInstance, valueOverTimeChartInstance;
 
     function initCharts() {
         const roiCtx = document.getElementById('roiChart')?.getContext('2d');
@@ -835,30 +874,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     }]
                 },
                 options: { ...commonChartOptions,
+                    plugins: { ...commonChartOptions.plugins, legend: {display: false}},
                     indexAxis: 'y',
                     scales: { x: { beginAtZero: true, grid: { color: '#374151' }, title: { display: true, text: 'Weeks', color: '#9ca3af' } }, y: { grid: { display: false } } }
                 }
             });
         }
 
-        const roiBreakdownCtx = document.getElementById('roiBreakdownChart')?.getContext('2d');
-        if (roiBreakdownCtx && !roiBreakdownChartInstance) {
-            roiBreakdownChartInstance = new Chart(roiBreakdownCtx, {
-                type: 'doughnut',
+        const valueOverTimeCtx = document.getElementById('valueOverTimeChart')?.getContext('2d');
+        if (valueOverTimeCtx && !valueOverTimeChartInstance) {
+            valueOverTimeChartInstance = new Chart(valueOverTimeCtx, {
+                type: 'bar',
                 data: {
-                    labels: ['Engineer Productivity Lift', 'Faster Business Insights', 'Reduced Rework & Errors'],
-                    datasets: [{
-                        label: 'Source of ROI',
-                        data: [50, 35, 15],
-                        backgroundColor: ['#b45309', '#d97706', '#f59e0b'],
-                        borderColor: '#111827',
-                        borderWidth: 4,
-                        hoverOffset: 8
-                    }]
+                    labels: ['Phase 1 (Months 1-3)', 'Phase 2 (Months 3-6)', 'Phase 3 (Months 6-12)'],
+                    datasets: [
+                        {
+                            label: 'IT Productivity Gains',
+                            data: [20, 40, 50],
+                            backgroundColor: '#b45309',
+                        },
+                        {
+                            label: 'Risk Reduction',
+                            data: [5, 10, 20],
+                            backgroundColor: '#d97706',
+                        },
+                        {
+                            label: 'New Business Value',
+                            data: [0, 15, 50],
+                            backgroundColor: '#f59e0b',
+                        }
+                    ]
                 },
                 options: { ...commonChartOptions,
-                    plugins: { ...commonChartOptions.plugins, 
-                        legend: { display: true, position: 'bottom', labels: { color: '#9ca3af', boxWidth: 12, padding: 15 } }
+                    scales: {
+                        x: { stacked: true, grid: { color: 'rgba(255,255,255,0.1)'} },
+                        y: { stacked: true, grid: { display: false }, ticks: {color: '#d1d5db'} }
                     }
                 }
             });
@@ -866,38 +916,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // GSAP Animations
-    const roiSection = document.getElementById('roi');
-    if(roiSection) {
-        const tl = gsap.timeline({
-            scrollTrigger: {
-                trigger: roiSection,
-                scroller: '#main-container',
-                start: 'top 70%',
-                toggleActions: 'play none none none',
-                onEnter: () => {
-                   initCharts(); // Initialize charts when section is entered
-                   if (roiChartInstance) roiChartInstance.options.animation = true;
-                   if (roiBreakdownChartInstance) roiBreakdownChartInstance.options.animation = true;
-                   if (roiChartInstance) roiChartInstance.update();
-                   if (roiBreakdownChartInstance) roiBreakdownChartInstance.update();
-                }
+    const impactSection = document.getElementById('impact');
+    if(impactSection) {
+        ScrollTrigger.create({
+            trigger: impactSection,
+            scroller: '#main-container',
+            start: 'top 70%',
+            toggleActions: 'play none none none',
+            onEnter: () => {
+                initCharts(); 
+                if (roiChartInstance) roiChartInstance.options.animation = true;
+                if (valueOverTimeChartInstance) valueOverTimeChartInstance.options.animation = true;
+                if (roiChartInstance) roiChartInstance.update();
+                if (valueOverTimeChartInstance) valueOverTimeChartInstance.update();
             }
         });
-
-        tl.from(roiSection.querySelectorAll('.glass-card'), {
-            opacity: 0,
-            y: 50,
-            duration: 0.8,
-            stagger: 0.2,
-            ease: 'power3.out'
-        })
-        .from(roiSection.querySelectorAll('.kpi-card'), {
-            opacity: 0,
-            x: -50,
-            duration: 0.6,
-            stagger: 0.15,
-            ease: 'power2.out'
-        }, "-=0.5");
     }
 
     // Page scrolling logic
